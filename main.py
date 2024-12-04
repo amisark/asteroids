@@ -3,12 +3,11 @@
 # throughout this file
 import pygame
 from constants import *
-#from player import Player
 from player import Player
 def main():
-    print("Starting asteroids!")
-    print(f"Screen width: {SCREEN_WIDTH}")
-    print(f"Screen height: {SCREEN_HEIGHT}")
+    #print("Starting asteroids!")
+    #print(f"Screen width: {SCREEN_WIDTH}")
+    #print(f"Screen height: {SCREEN_HEIGHT}")
 
     pygame.init()
     pyg_clock = pygame.time.Clock()
@@ -16,15 +15,30 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     x      = SCREEN_WIDTH / 2
     y      = SCREEN_HEIGHT / 2
-    tplayer = Player(x, y, PLAYER_RADIUS)
+
+    updatable = pygame.sprite.Group()
+    drawable  = pygame.sprite.Group()
+    Player.containers = (updatable, drawable)
+
+    tplayer = Player(x, y)
+
     while True :
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-        screen.fill([0,0,0])
-        tplayer.update(dt)
-        tplayer.draw(screen)
+
+        for obj in updatable:
+            obj.update(dt)
+
+        #screen.fill([0,0,0])
+        screen.fill("black")
+
+        for obj in drawable:
+            obj.draw(screen)
+
         pygame.display.flip()
+
+        # limit the framerate to 60 FPS
         elased_milliseecond = pyg_clock.tick(60)
         dt += elased_milliseecond / 1000
 
